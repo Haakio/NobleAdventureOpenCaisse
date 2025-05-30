@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NobleAdventure Caisse Opening</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            background-image: url('https://placehold.co/1920x1080/1a202c/2d3748?text=Fonds+Médiéval+Subtil'); /* Subtle medieval background */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .container {
+            max-width: 1024px; /* Slightly wider container */
+            width: 100%;
+            background-color: #2d3748; /* Slightly lighter dark background */
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 0, 0, 0.2) inset; /* Enhanced shadow */
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            backdrop-filter: blur(5px); /* Slightly blur background behind container */
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-primary {
+            background-color: #63b3ed; /* Blue */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary:hover {
+            background-color: #4299e1; /* Darker blue */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
+        }
+        .btn-primary:active::after {
+            width: 200%;
+            height: 200%;
+            opacity: 1;
+            transition: 0s;
+        }
+
+        .btn-red {
+            background-color: #ef4444; /* Red */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-red:hover {
+            background-color: #dc2626; /* Darker red */
+        }
+        .crate-item-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background-color: #4a5568; /* Darker grey */
+            border-radius: 1rem;
+            text-align: center;
+            min-height: 150px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .crate-item-card:hover:not(.opacity-50) {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .reward-item-display {
+            background-color: #4a5568;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            border: 2px solid; /* Border for rarity glow */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message-box {
+            background-color: #f6ad55; /* Orange for warnings/info */
+            color: #2d3748;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .inventory-item {
+            background-color: #4a5568;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column; /* Stack name and rarity */
+            justify-content: space-between;
+            align-items: flex-start; /* Align text to start */
+            gap: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid; /* Border for rarity */
+        }
+        .inventory-item-details {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+        }
+        .inventory-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+            border-radius: 0.25rem;
+            background-color: #3e4757; /* Slightly lighter background for image */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* CS:GO style reel */
+        #reels-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem; /* Space between reels */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .reel-container {
+            position: relative;
+            width: 300px; /* Fixed width for each reel container */
+            height: 120px; /* Height of the reel */
+            overflow: hidden;
+            background-color: #1f2937; /* Darker background for the reel */
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+            border: 2px solid #4a5568;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.7); /* Deeper inner shadow */
+            flex-shrink: 0; /* Prevent shrinking in flex container */
+        }
+        .reel {
+            display: flex;
+            position: absolute;
+            left: 0;
+            height: 100%;
+            transition: transform 6s cubic-bezier(0.2, 0.8, 0.2, 1); /* Smooth transition */
+        }
+        .reel-item {
+            flex-shrink: 0;
+            width: 100px; /* Width of each item in the reel */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0.5rem;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            box-sizing: border-box;
+            background-color: rgba(74, 85, 104, 0.5); /* Semi-transparent background */
+            transition: background-color 0.3s ease;
+        }
+        .reel-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            border-radius: 0.25rem;
+            background-color: #3e4757;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+        }
+        .reel-item p {
+            font-size: 0.75rem;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            margin-top: 0.25rem;
+        }
+        .marker {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px; /* Thicker marker */
+            background-color: #f56565; /* Red marker */
+            transform: translateX(-50%);
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(245, 101, 101, 0.9); /* Stronger glow */
+        }
+
+        /* Shop Item Styling */
+        .shop-item-card {
+            background-color: #4a5568;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .shop-item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .shop-item-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            background-color: #3e4757;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        #sfx-bubble {
+            min-width: 180px;
+            max-width: 350px;
+            user-select: none;
+        }
+        #sfx-bubble.sfx-collapsed {
+            width: 48px;
+            min-width: 0;
+            max-width: 48px;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            justify-content: center;
+            gap: 0;
+        }
+        #sfx-bubble.sfx-collapsed input,
+        #sfx-bubble.sfx-collapsed span:not(#sfx-bubble-icon),
+        #sfx-bubble.sfx-collapsed #sfx-volume-label {
+            display: none;
+        }
+        #sfx-bubble-toggle {
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Rarity colors for borders and text */
+        .border-gray-400 { border-color: #a0aec0; } /* Commun */
+        .border-green-400 { border-color: #68d391; } /* Peu Commun */
+        .border-blue-400 { border-color: #63b3ed; } /* Rare */
+        .border-purple-400 { border-color: #a78bfa; } /* Légendaire */
+        .border-red-400 { border-color: #f56565; } /* Mythique */
+        
+    input[type="range"].accent-blue-400::-webkit-slider-thumb {
+        background: #63b3ed;
+    }
+    input[type="range"].accent-blue-400::-moz-range-thumb {
+        background: #63b3ed;
+    }
+    input[type="range"].accent-blue-400::-ms-thumb {
+        background: #63b3ed;
+    }
+    input[type="range"].accent-blue-400 {
+        accent-color: #63b3ed;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center">
+            <h1 class="text-4xl font-bold text-white mb-4">NobleAdventure Caisse Opening</h1>
+            <p class="text-lg text-gray-400">Dépensez vos pièces pour tenter de gagner des objets rares et échangez-les avec votre bot Discord !</p>
+        </header>
+
+        <div class="flex flex-col items-center mb-4">
+    <audio id="site-music" loop></audio>
+    <div class="flex flex-col md:flex-row gap-2 mt-2 items-center">
+        <div class="flex items-center gap-2">
+            <button id="toggle-music-btn" class="btn-primary flex items-center gap-1">
+                <span id="music-icon">⏸️</span>
+                <span id="music-btn-label">Couper la musique</span>
+            </button>
+            <select id="music-select" class="p-2 rounded-md bg-gray-800 text-white">
+                <option value="0">Musique 1</option>
+                <option value="1">Musique 2</option>
+                <option value="2">Musique 3</option>
+            </select>
+        </div>
+        <div class="flex items-center gap-2 mt-2 md:mt-0 md:ml-4">
+            <span class="text-gray-300 text-sm">🔊</span>
+            <input type="range" id="music-volume" min="0" max="100" value="50" class="accent-blue-400 h-2 w-32 rounded-lg cursor-pointer">
+            <span id="music-volume-label" class="text-gray-300 text-sm w-10 text-right">50%</span>
+        </div>
+    </div>
+    <div id="music-title" class="mt-2 text-blue-300 font-semibold text-sm text-center"></div>
+</div>
+
+        <section class="bg-gray-700 p-6 rounded-xl shadow-lg">
+  <h2 class="text-3xl font-bold text-white mb-6 text-center">Code de Récompense</h2>
+  <form id="code-redeem-form" class="flex flex-col md:flex-row gap-4 justify-center items-center">
+    <input type="text" id="reward-code-input" placeholder="Entrez un code (ex: NOUVEAUX)" class="p-2 rounded-md w-full md:w-1/2">
+    <button type="submit" class="btn-primary">Réclamer</button>
+  </form>
+</section>
+
+        <section class="bg-gray-700 p-6 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                <img id="user-avatar" src="https://placehold.co/60x60/63b3ed/ffffff?text=JT" alt="Avatar de l'utilisateur" class="w-16 h-16 rounded-full border-2 border-blue-400">
+                <div>
+                    <p class="text-xl font-semibold text-white" id="user-name">Joueur Test</p>
+                    <p class="text-gray-400">ID Discord: <span id="user-id">simulated_user_12345</span></p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-2xl font-bold text-yellow-400">Pièces du Site: <span id="user-coins">0</span></p>
+                <p class="text-xl font-bold text-purple-400">Pièces Discord: <span id="discord-coins">0</span></p>
+            </div>
+        </section>
+
+        <section class="bg-gray-700 p-6 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">Ouvrir une Caisse</h2>
+
+            <div id="reels-wrapper" class="flex justify-center items-center gap-4 flex-wrap">
+                <div class="reel-container" id="reel-container-1">
+                    <div class="marker"></div>
+                    <div class="reel" id="crate-reel-1"></div>
+                </div>
+                <div class="reel-container hidden" id="reel-container-2">
+                    <div class="marker"></div>
+                    <div class="reel" id="crate-reel-2"></div>
+                </div>
+                <div class="reel-container hidden" id="reel-container-3">
+                    <div class="marker"></div>
+                    <div class="reel" id="crate-reel-3"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <div class="crate-item-card" id="basic-crate">
+                    <h3 class="text-2xl font-semibold text-white mb-2">Caisse du Chevalier</h3>
+                    <p class="text-gray-400 mb-4">Coût: <span class="text-yellow-400 font-bold">100 Pièces du Site</span></p>
+                    <p class="text-gray-400 text-sm">Contient des épées, casques et armures.</p>
+                    <div class="flex flex-col gap-2 mt-4 w-full">
+                        <button class="btn-primary open-crate-btn" data-crate-id="basic" data-open-count="1">Ouvrir 1 Caisse</button>
+                        <button class="btn-primary open-crate-btn" data-crate-id="basic" data-open-count="3">Ouvrir 3 Caisses</button>
+                    </div>
+                </div>
+                <div class="crate-item-card" id="premium-crate">
+                    <h3 class="text-2xl font-semibold text-white mb-2">Caisse du Dragon</h3>
+                    <p class="text-gray-400 mb-4">Coût: <span class="text-yellow-400 font-bold">500 Pièces du Site</span></p>
+                    <p class="text-gray-400 text-sm">Contient des objets rares à légendaires.</p>
+                    <div class="flex flex-col gap-2 mt-4 w-full">
+                        <button class="btn-primary open-crate-btn" data-crate-id="premium" data-open-count="1">Ouvrir 1 Caisse</button>
+                        <button class="btn-primary open-crate-btn" data-crate-id="premium" data-open-count="3">Ouvrir 3 Caisses</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="last-reward-container" class="reward-item-display hidden">
+                <p id="last-reward-name" class="text-white"></p>
+                <p id="last-reward-rarity" class="text-gray-400 text-sm"></p>
+            </div>
+
+            <div id="rewards-display-container" class="mt-8 hidden">
+                <h3 class="text-2xl font-bold text-white mb-4 text-center">Objets Obtenus</h3>
+                <div id="multiple-rewards-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    </div>
+            </div>
+
+            <div id="message-box" class="message-box hidden"></div>
+        </section>
+
+        <section class="bg-gray-700 p-6 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">Boutique</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="shop-item-card">
+                    <img src="https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/Extended_Video.gif" alt="Pack de pièces Discord">
+                    <h3 class="text-xl font-semibold text-white mb-2">Pack Pièces Discord (Petit)</h3>
+                    <p class="text-gray-400 mb-4">Obtenez <span class="text-purple-400 font-bold">500 Pièces Discord</span></p>
+                    <p class="text-gray-400 mb-4">Coût: <span class="text-yellow-400 font-bold">1500 Pièces du Site</span></p>
+                    <button class="btn-primary buy-discord-coins-btn" data-amount="500" data-cost="1500">Acheter</button>
+                </div>
+                <div class="shop-item-card">
+                    <img src="https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/Extended_Video.gif" alt="Pack de pièces Discord">
+                    <h3 class="text-xl font-semibold text-white mb-2">Pack Pièces Discord (Moyen)</h3>
+                    <p class="text-gray-400 mb-4">Obtenez <span class="text-purple-400 font-bold">2000 Pièces Discord</span></p>
+                    <p class="text-gray-400 mb-4">Coût: <span class="text-yellow-400 font-bold">5000 Pièces du Site</span></p>
+                    <button class="btn-primary buy-discord-coins-btn" data-amount="2000" data-cost="5000">Acheter</button>
+                </div>
+                <div class="shop-item-card">
+                    <img src="https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/Extended_Video.gif" alt="Pack de pièces Discord">
+                    <h3 class="text-xl font-semibold text-white mb-2">Pack Pièces Discord (Grand)</h3>
+                    <p class="text-gray-400 mb-4">Obtenez <span class="text-purple-400 font-bold">5000 Pièces Discord</span></p>
+                    <p class="text-gray-400 mb-4">Coût: <span class="text-yellow-400 font-bold">10000 Pièces du Site</span></p>
+                    <button class="btn-primary buy-discord-coins-btn" data-amount="5000" data-cost="10000">Acheter</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-gray-700 p-6 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">Votre Inventaire</h2>
+            <div id="inventory-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <p id="no-items-message" class="text-gray-400 text-center col-span-full">Votre inventaire est vide.</p>
+            </div>
+        </section>
+    </div>
+
+<!-- Bulle flottante pour le volume SFX -->
+<div id="sfx-bubble" class="fixed bottom-6 left-6 bg-gray-800 bg-opacity-90 rounded-xl shadow-lg px-4 py-3 flex items-center gap-3 z-50 transition-all duration-300">
+    <span class="text-gray-200 text-base font-semibold">🔈 Effets</span>
+    <input type="range" id="sfx-volume" min="0" max="100" value="70" class="accent-blue-400 h-2 w-28 rounded-lg cursor-pointer">
+    <span id="sfx-volume-label" class="text-gray-300 text-sm w-10 text-right">70%</span>
+    <button id="sfx-bubble-toggle" class="ml-2 text-gray-400 hover:text-blue-400 transition-colors text-xl" title="Réduire">
+        <span id="sfx-bubble-icon">−</span>
+    </button>
+</div>
+
+    <script>
+        // --- Configuration du jeu ---
+        const CRATE_COST_BASIC = 100; // Coût de la caisse du Chevalier
+        const CRATE_COST_PREMIUM = 500; // Coût de la caisse du Dragon
+        const REEL_ITEM_WIDTH = 100; // Largeur d'un objet dans le rouleau en pixels
+        const REEL_TRANSITION_DURATION = 6000; // Durée de l'animation du rouleau en ms
+
+        // Définition des objets possibles, de leur rareté, couleur, chance et image
+        // Items for Basic Crate (Caisse du Chevalier)
+        const basicCrateItems = [
+            // Swords
+            { id: 'sword_short', name: "Épée d’Aurore Céleste", rarity: "Commun", color: "text-gray-400", sellPrice: 10, chance: 0.08, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/pedAuroreCleste.png" },
+            { id: 'sword_iron', name: "Épée du Jugement Éthéré", rarity: "Peu Commun", color: "text-green-400", sellPrice: 30, chance: 0.06, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/peduJugementthr.png" },
+            { id: 'sword_long', name: "Épée de la Lueur Divine", rarity: "Rare", color: "text-blue-400", sellPrice: 100, chance: 0.03, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/pedelaLueurDivine.png" },
+            { id: 'sword_knight', name: "Épée des Étoiles Sombres", rarity: "Rare", color: "text-blue-400", sellPrice: 120, chance: 0.02, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/pedestoilesSombres.png" },
+            { id: 'sword_runic', name: "Épée du Vent Sacré", rarity: "Légendaire", color: "text-purple-400", sellPrice: 400, chance: 0.005, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/peduVentSacr.png" },
+            // Helmets
+            { id: 'helmet_leather', name: "Casque du Silence Astral", rarity: "Commun", color: "text-gray-400", sellPrice: 8, chance: 0.08, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_233533314.png" },
+            { id: 'helmet_simple', name: "Casque de l’Ombre Eternelle", rarity: "Peu Commun", color: "text-green-400", sellPrice: 25, chance: 0.06, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_233559489.png" },
+            { id: 'helmet_soldier', name: "Casque d’Aegion, le Veilleur", rarity: "Rare", color: "text-blue-400", sellPrice: 90, chance: 0.03, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_233622925.png" },
+            { id: 'helmet_great', name: "Casque du Sanctuaire Brisé", rarity: "Rare", color: "text-blue-400", sellPrice: 110, chance: 0.02, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/Nouveauprojet.png" },
+            { id: 'helmet_dragon', name: "Casque de Fer d’Élyséa", rarity: "Légendaire", color: "text-purple-400", sellPrice: 350, chance: 0.005, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/Nouveauprojet(1).png" },
+            // Armors
+            { id: 'armor_padded', name: "Armure du Cœur d’Astralys", rarity: "Commun", color: "text-gray-400", sellPrice: 12, chance: 0.08, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_234748028.png" },
+            { id: 'armor_chainmail', name: "Armure du Jugement Silencieux", rarity: "Peu Commun", color: "text-green-400", sellPrice: 60, chance: 0.06, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_234737571.png" },
+            { id: 'armor_plate', name: "Armure de l’Empire Oublié", rarity: "Rare", color: "text-blue-400", sellPrice: 200, chance: 0.03, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_234743503.png" },
+            { id: 'armor_royal', name: "Armure de Lumen, l’Éclat Divin", rarity: "Rare", color: "text-blue-400", sellPrice: 250, chance: 0.02, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_234751624.png" },
+            { id: 'armor_elite', name: "Armure du Titan de Verre", rarity: "Légendaire", color: "text-purple-400", sellPrice: 600, chance: 0.005, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_234755666.png" },
+        ];
+
+        // Items for Premium Crate (Caisse du Dragon) - ADJUSTED SELL PRICES
+        const premiumCrateItems = [
+            { id: 'sword_dragonfire', name: "Lame de Feu Draconique", rarity: "Légendaire", color: "text-purple-400", sellPrice: 500, chance: 0.15, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/Nouveauprojet(2).png" },
+            { id: 'armor_celestial', name: "Armure Céleste", rarity: "Légendaire", color: "text-purple-400", sellPrice: 600, chance: 0.10, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_235602887.png" },
+            { id: 'staff_elder', name: "Bâton des Anciens", rarity: "Légendaire", color: "text-purple-400", sellPrice: 350, chance: 0.10, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_235634211.png" },
+            { id: 'bow_elven', name: "Arc Elfique Précis", rarity: "Rare", color: "text-blue-400", sellPrice: 250, chance: 0.20, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_235653475.png" },
+            { id: 'shield_runic', name: "Bouclier Runique", rarity: "Rare", color: "text-blue-400", sellPrice: 300, chance: 0.15, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_235715496.png" },
+            { id: 'amulet_power', name: "Amulette de Puissance", rarity: "Rare", color: "text-blue-400", sellPrice: 250, chance: 0.10, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_235735908.png" },
+            { id: 'legendary_gem', name: "Gemme Légendaire", rarity: "Légendaire", color: "text-purple-400", sellPrice: 300, chance: 0.05, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_235832322.png" },
+            { id: 'mythic_crown', name: "Couronne Mythique", rarity: "Mythique", color: "text-red-400", sellPrice: 2000, chance: 0.009, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_235847673.png" },
+            { id: 'mythic_heart', name: "Cœur de Dragon", rarity: "Mythique", color: "text-red-400", sellPrice: 2500, chance: 0.001, image: "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/image_2025-05-30_235902836.png" },
+        ];
+
+        // --- Éléments du DOM ---
+        const userNameEl = document.getElementById('user-name');
+        const userIdEl = document.getElementById('user-id');
+        const userAvatarEl = document.getElementById('user-avatar');
+        const userCoinsEl = document.getElementById('user-coins');
+        const discordCoinsEl = document.getElementById('discord-coins');
+        const openCrateBtns = document.querySelectorAll('.open-crate-btn');
+        const crateReel = document.getElementById('crate-reel-1'); // Default reel
+        const lastRewardContainer = document.getElementById('last-reward-container');
+        const lastRewardNameEl = document.getElementById('last-reward-name');
+        const lastRewardRarityEl = document.getElementById('last-reward-rarity');
+        const messageBoxEl = document.getElementById('message-box');
+        const inventoryListEl = document.getElementById('inventory-list');
+        const noItemsMessageEl = document.getElementById('no-items-message');
+        const buyDiscordCoinsBtns = document.querySelectorAll('.buy-discord-coins-btn');
+        const premiumCrateCard = document.getElementById('premium-crate'); // Référence à la carte de la caisse premium
+
+        // New elements for multiple reels/rewards
+        const reelsWrapper = document.getElementById('reels-wrapper');
+        const reelContainers = [
+            document.getElementById('reel-container-1'),
+            document.getElementById('reel-container-2'),
+            document.getElementById('reel-container-3')
+        ];
+        const multipleRewardsList = document.getElementById('multiple-rewards-list');
+        const rewardsDisplayContainer = document.getElementById('rewards-display-container');
+
+
+        // --- État du jeu (Simulé localement) ---
+        let currentUser = {
+            id: 'simulated_user_12345',
+            name: 'Joueur Test',
+            avatar: 'https://placehold.co/60x60/63b3ed/ffffff?text=JT',
+            coins: 1500,
+            discordCoins: 0,
+            inventory: []
+        };
+
+        // --- Configuration des sons avec Tone.js ---
+        const synth = new Tone.Synth().toDestination();
+        const metalHit = new Tone.NoiseSynth({
+            noise: { type: "white" },
+            envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.1 }
+        }).toDestination();
+        const coinSound = new Tone.PluckSynth().toDestination();
+        const clickSound = new Tone.MembraneSynth().toDestination();
+
+        function playClickSound() {
+    clickSound.volume.value = Tone.gainToDb(sfxVolume);
+    clickSound.triggerAttackRelease("C4", "8n");
+}
+function playCrateOpenSound() {
+    metalHit.volume.value = Tone.gainToDb(sfxVolume);
+    synth.volume.value = Tone.gainToDb(sfxVolume);
+    metalHit.triggerAttackRelease("16n", Tone.now(), 0.5);
+    synth.triggerAttackRelease("C3", "4n", Tone.now() + 0.1);
+}
+function playItemObtainedSound(rarity) {
+    synth.volume.value = Tone.gainToDb(sfxVolume);
+    let note = "C4";
+    switch (rarity) {
+        case "Commun": note = "C4"; break;
+        case "Peu Commun": note = "E4"; break;
+        case "Rare": note = "G4"; break;
+        case "Légendaire": note = "C5"; break;
+        case "Mythique": note = "E5"; break;
+    }
+    synth.triggerAttackRelease(note, "8n", Tone.now());
+}
+function playCoinGainSound() {
+    coinSound.volume.value = Tone.gainToDb(sfxVolume);
+    coinSound.triggerAttackRelease("G4", "8n");
+}
+function playCoinLossSound() {
+    coinSound.volume.value = Tone.gainToDb(sfxVolume);
+    coinSound.triggerAttackRelease("C3", "8n");
+}
+
+let sfxVolume = 0.7; // Volume des bruitages (0 = muet, 1 = max)
+const sfxVolumeSlider = document.getElementById('sfx-volume');
+const sfxVolumeLabel = document.getElementById('sfx-volume-label');
+sfxVolumeSlider.addEventListener('input', (e) => {
+    sfxVolume = parseInt(e.target.value, 10) / 100;
+    sfxVolumeLabel.textContent = Math.round(sfxVolume * 100) + "%";
+});
+
+        // --- Fonctions d'affichage ---
+
+        /**
+         * Met à jour l'affichage des informations de l'utilisateur.
+         */
+        function displayUserInfo() {
+            userNameEl.textContent = currentUser.name;
+            userIdEl.textContent = currentUser.id;
+            userAvatarEl.src = currentUser.avatar;
+            userCoinsEl.textContent = currentUser.coins;
+            discordCoinsEl.textContent = currentUser.discordCoins;
+        }
+
+        /**
+         * Affiche un message temporaire à l'utilisateur.
+         * @param {string} message - Le message à afficher.
+         * @param {string} type - Le type de message (ex: 'error', 'success', 'info').
+         */
+        function showMessage(message, type = 'info') {
+            messageBoxEl.textContent = message;
+            messageBoxEl.classList.remove('hidden', 'bg-red-500', 'bg-green-500', 'bg-orange-400');
+            if (type === 'error') {
+                messageBoxEl.classList.add('bg-red-500');
+            } else if (type === 'success') {
+                messageBoxEl.classList.add('bg-green-500');
+            } else {
+                messageBoxEl.classList.add('bg-orange-400');
+            }
+            setTimeout(() => {
+                messageBoxEl.classList.add('hidden');
+            }, 3000); // Le message disparaît après 3 secondes
+        }
+
+        /**
+         * Affiche l'inventaire de l'utilisateur.
+         */
+        function displayInventory() {
+            inventoryListEl.innerHTML = ''; // Vide l'inventaire actuel
+            if (currentUser.inventory.length === 0) {
+                noItemsMessageEl.classList.remove('hidden');
+            } else {
+                noItemsMessageEl.classList.add('hidden');
+                currentUser.inventory.forEach((item, index) => {
+                    const itemEl = document.createElement('div');
+                    // Ajoute la classe de bordure de rareté
+                    itemEl.className = `inventory-item ${item.color.replace('text-', 'border-')}-400`;
+                    itemEl.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-contain self-center">
+                        <div class="inventory-item-details">
+                            <div>
+                                <span class="font-semibold text-white">${item.name}</span><br>
+                                <span class="text-xs ${item.color}">${item.rarity}</span>
+                            </div>
+                            <button class="btn-red sell-item-btn" data-index="${index}" data-price="${item.sellPrice}">Vendre (${item.sellPrice} Pièces)</button>
+                        </div>
+                    `;
+                    inventoryListEl.appendChild(itemEl);
+                });
+
+                // Attacher les écouteurs d'événements aux nouveaux boutons de vente
+                document.querySelectorAll('.sell-item-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        playClickSound();
+                        const itemIndex = parseInt(event.target.dataset.index);
+                        const itemPrice = parseInt(event.target.dataset.price);
+                        sellItem(itemIndex, itemPrice);
+                    });
+                });
+            }
+        }
+
+        // --- Logique du jeu ---
+
+        /**
+         * Sélectionne un objet aléatoire en fonction de sa rareté et du type de caisse.
+         * @param {Array<object>} itemPool - Le tableau d'objets à partir duquel tirer.
+         * @returns {object} L'objet tiré.
+         */
+        function getRandomItem(itemPool) {
+            const totalChance = itemPool.reduce((sum, item) => sum + item.chance, 0);
+            let random = Math.random() * totalChance;
+
+            for (const item of itemPool) {
+                if (random < item.chance) {
+                    return item;
+                }
+                random -= item.chance;
+            }
+            return itemPool[0]; // Fallback au cas où
+        }
+
+        /**
+         * Gère l'ouverture d'une caisse avec animation de rouleau.
+         * @param {string} crateId - L'ID de la caisse à ouvrir (ex: 'basic', 'premium').
+         * @param {number} openCount - Le nombre de caisses à ouvrir (1 ou 3).
+         */
+        async function openCrate(crateId, openCount = 1) {
+            let cost;
+            let itemPool;
+            let crateName;
+
+            if (crateId === 'basic') {
+                cost = CRATE_COST_BASIC;
+                itemPool = basicCrateItems;
+                crateName = "Caisse du Chevalier";
+            } else if (crateId === 'premium') {
+                cost = CRATE_COST_PREMIUM;
+                itemPool = premiumCrateItems;
+                crateName = "Caisse du Dragon";
+            } else {
+                showMessage("Type de caisse inconnu.", 'error');
+                return;
+            }
+
+            const totalCost = cost * openCount;
+
+            if (currentUser.coins < totalCost) {
+                showMessage(`Vous n'avez pas assez de pièces du site pour ouvrir ${openCount} ${crateName}(s) (Coût total: ${totalCost}) !`, 'error');
+                playCoinLossSound();
+                return;
+            }
+
+            // Désactiver les boutons
+            openCrateBtns.forEach(btn => btn.disabled = true);
+            lastRewardContainer.classList.add('hidden'); // Cacher le dernier objet pendant l'animation
+            
+            // Show/hide reward containers based on openCount
+            if (openCount > 1) {
+                rewardsDisplayContainer.classList.remove('hidden');
+                multipleRewardsList.innerHTML = ''; // Clear previous multiple rewards
+            } else {
+                rewardsDisplayContainer.classList.add('hidden');
+            }
+
+            showMessage(`Ouverture de ${openCount} ${crateName}(s)...`, 'info');
+            playCrateOpenSound();
+
+            // Déduire les pièces (simulé)
+            currentUser.coins -= totalCost;
+            displayUserInfo();
+
+            const obtainedItems = [];
+            for (let i = 0; i < openCount; i++) {
+                obtainedItems.push(getRandomItem(itemPool));
+            }
+
+            const activeReels = [];
+            for (let i = 0; i < reelContainers.length; i++) {
+                const reelContainer = reelContainers[i];
+                const reelEl = reelContainer.querySelector('.reel');
+                if (i < openCount) {
+                    reelContainer.classList.remove('hidden'); // Show relevant reels
+                    activeReels.push({ container: reelContainer, element: reelEl, item: obtainedItems[i] });
+                } else {
+                    reelContainer.classList.add('hidden'); // Hide unused reels
+                }
+            }
+
+            const animationPromises = activeReels.map(async (reel, index) => {
+                reel.element.innerHTML = ''; // Clear reel
+                const numItemsBefore = 50;
+                const numItemsAfter = 50;
+
+                // Populate reel with random items
+                for (let i = 0; i < numItemsBefore; i++) {
+                    const randomItem = getRandomItem(itemPool);
+                    const itemEl = document.createElement('div');
+                    itemEl.className = `reel-item`;
+                    itemEl.innerHTML = `<img src="${randomItem.image}" alt="${randomItem.name}"><p class="${randomItem.color}">${randomItem.name}</p>`;
+                    reel.element.appendChild(itemEl);
+                }
+
+                // Add the winning item
+                const winningItemIndexInReel = reel.element.children.length;
+                const winningItemEl = document.createElement('div');
+                winningItemEl.className = `reel-item`;
+                winningItemEl.innerHTML = `<img src="${reel.item.image}" alt="${reel.item.name}"><p class="${reel.item.color}">${reel.item.name}</p>`;
+                reel.element.appendChild(winningItemEl);
+
+                // Populate end of reel
+                for (let i = 0; i < numItemsAfter; i++) {
+                    const randomItem = getRandomItem(itemPool);
+                    const itemEl = document.createElement('div');
+                    itemEl.className = `reel-item`;
+                    itemEl.innerHTML = `<img src="${randomItem.image}" alt="${randomItem.name}"><p class="${randomItem.color}">${randomItem.name}</p>`;
+                    reel.element.appendChild(itemEl);
+                }
+
+                // Calculate final position for this reel
+                const reelContainerWidth = reel.container.offsetWidth; // Use this specific reel container's width
+                const centerOfContainer = reelContainerWidth / 2;
+                const winningItemStartOffset = winningItemIndexInReel * REEL_ITEM_WIDTH;
+                const offsetToCenter = centerOfContainer - (REEL_ITEM_WIDTH / 2);
+                const finalTranslateX = -(winningItemStartOffset - offsetToCenter);
+
+                // Apply transition
+                reel.element.style.transition = `transform ${REEL_TRANSITION_DURATION / 1000}s cubic-bezier(0.2, 0.8, 0.2, 1)`;
+                reel.element.style.transform = `translateX(${finalTranslateX}px)`;
+
+                return new Promise(resolve => setTimeout(resolve, REEL_TRANSITION_DURATION + 500));
+            });
+
+            await Promise.all(animationPromises); // Wait for all animations to complete
+
+            // Add all obtained items to inventory
+            currentUser.inventory.push(...obtainedItems);
+            displayInventory();
+
+            // Display rewards (either single or multiple)
+            if (openCount === 1) {
+                const lastObtainedItem = obtainedItems[0];
+                lastRewardNameEl.textContent = lastObtainedItem.name;
+                lastRewardNameEl.className = `text-white font-bold ${lastObtainedItem.color}`;
+                lastRewardRarityEl.textContent = `Rareté: ${lastObtainedItem.rarity}`;
+                lastRewardRarityEl.className = `text-gray-400 text-sm ${lastObtainedItem.color}`;
+                lastRewardContainer.className = `reward-item-display ${lastObtainedItem.color.replace('text-', 'border-')}-400`;
+                lastRewardContainer.classList.remove('hidden');
+                showMessage(`Félicitations ! Vous avez obtenu : ${lastObtainedItem.name} (${lastObtainedItem.rarity})`, 'success');
+                playItemObtainedSound(lastObtainedItem.rarity);
+            } else {
+                // Display all obtained items in the multiple rewards container
+                obtainedItems.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = `reward-item-display ${item.color.replace('text-', 'border-')}-400`;
+                    itemEl.innerHTML = `<p class="text-white font-bold">${item.name}</p><p class="text-gray-400 text-sm">${item.rarity}</p>`;
+                    multipleRewardsList.appendChild(itemEl);
+                });
+                showMessage(`Félicitations ! Vous avez obtenu ${openCount} objets !`, 'success');
+                // Play sound for the highest rarity item obtained
+                const highestRarityItem = obtainedItems.sort((a, b) => {
+                    const rarityOrder = { "Commun": 0, "Peu Commun": 1, "Rare": 2, "Légendaire": 3, "Mythique": 4 };
+                    return rarityOrder[b.rarity] - rarityOrder[a.rarity];
+                })[0];
+                playItemObtainedSound(highestRarityItem.rarity);
+            }
+
+            // Reset all reels after a short delay
+            setTimeout(() => {
+                activeReels.forEach(reel => {
+                    reel.element.style.transition = 'none';
+                    reel.element.style.transform = 'translateX(0)';
+                    reel.element.innerHTML = '';
+                    // Hide reels if they were for multiple opens
+                    if (openCount > 1) {
+                        reel.container.classList.add('hidden');
+                    }
+                });
+                openCrateBtns.forEach(btn => btn.disabled = false);
+            }, 1000);
+        }
+
+        /**
+         * Gère la vente d'un objet.
+         * @param {number} index - L'index de l'objet dans l'inventaire.
+         * @param {number} price - Le prix de vente de l'objet.
+         */
+        function sellItem(index, price) {
+            if (index >= 0 && index < currentUser.inventory.length) {
+                const soldItem = currentUser.inventory.splice(index, 1)[0]; // Supprime l'objet de l'inventaire
+                currentUser.coins += price; // Ajoute les pièces
+                displayUserInfo();
+                displayInventory();
+                showMessage(`Vous avez vendu "${soldItem.name}" pour ${price} pièces du site.`, 'success');
+                playCoinGainSound();
+                // --- SIMULATION D'APPEL AU BOT DISCORD ---
+                // Si vous aviez un backend, vous feriez un appel ici pour informer le serveur
+                // que l'utilisateur a vendu un objet, et le serveur mettrait à jour la base de données.
+                // Exemple:
+                // fetch('/api/discord/sellItem', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ userId: currentUser.id, itemId: soldItem.id, price: price })
+                // });
+                // --- FIN DE LA SIMULATION ---
+            }
+        }
+
+        /**
+         * Gère l'achat de pièces Discord.
+         * @param {number} amount - La quantité de pièces Discord à acheter.
+         * @param {number} cost - Le coût en pièces du site.
+         */
+        function buyDiscordCoins(amount, cost) {
+            playClickSound();
+            if (currentUser.coins < cost) {
+                showMessage("Vous n'avez pas assez de pièces du site pour acheter ce pack !", 'error');
+                playCoinLossSound();
+                return;
+            }
+
+            currentUser.coins -= cost; // Déduit les pièces du site
+            currentUser.discordCoins += amount; // Ajoute les pièces Discord (simulé)
+            displayUserInfo();
+            showMessage(`Vous avez acheté ${amount} pièces Discord pour ${cost} pièces du site !`, 'success');
+            playCoinGainSound();
+
+            // --- SIMULATION D'APPEL AU BOT DISCORD ---
+            // C'est ici que vous feriez un appel API à votre serveur backend.
+            // Le serveur devrait ensuite communiquer avec votre bot Discord pour
+            // ajouter les pièces au compte du joueur sur Discord.
+            // Exemple:
+            // fetch('/api/discord/addCoins', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ userId: currentUser.id, amount: amount })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.success) {
+            //         // Mettre à jour les pièces Discord si l'opération est confirmée par le bot
+            //         // currentUser.discordCoins = data.newDiscordCoins;
+            //         // displayUserInfo();
+            //         // showMessage("Pièces Discord ajoutées avec succès !", 'success');
+            //     } else {
+            //         // Gérer l'erreur si le bot n'a pas pu ajouter les pièces
+            //         // showMessage(data.message || "Erreur lors de l'ajout des pièces Discord.", 'error');
+            //     }
+            // })
+            // .catch(error => {
+            //     console.error('Erreur API:', error);
+            //     showMessage("Erreur de connexion au serveur.", 'error');
+            // });
+            // --- FIN DE LA SIMULATION ---
+        }
+
+
+        // --- Initialisation et Événements ---
+
+        // Événements pour les boutons d'ouverture de caisse
+        openCrateBtns.forEach(button => {
+            button.addEventListener('click', () => {
+                playClickSound();
+                const crateId = button.dataset.crateId;
+                const openCount = parseInt(button.dataset.openCount); // Récupère le nombre de caisses à ouvrir
+                openCrate(crateId, openCount);
+            });
+        });
+
+        // Événements pour les boutons d'achat de pièces Discord
+        buyDiscordCoinsBtns.forEach(button => {
+            button.addEventListener('click', () => {
+                const amount = parseInt(button.dataset.amount);
+                const cost = parseInt(button.dataset.cost);
+                buyDiscordCoins(amount, cost);
+            });
+        });
+
+        // Initialiser l'affichage au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            displayUserInfo();
+            displayInventory();
+            // Initialiser le contexte audio de Tone.js au premier clic de l'utilisateur
+            document.body.addEventListener('click', Tone.start, { once: true });
+        });
+
+        // --- Gestion du formulaire de code cadeau ---
+        const redeemForm = document.getElementById('code-redeem-form');
+        const codeInput = document.getElementById('reward-code-input');
+        const usedCodes = new Set(); // Évite réutilisation
+
+        redeemForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          playClickSound();
+          const code = codeInput.value.trim().toUpperCase();
+          if (!code) return;
+          if (usedCodes.has(code)) {
+            showMessage("Code déjà utilisé !", "error");
+            return;
+          }
+          if (code === "NOUVEAUX") {
+    currentUser.coins += 1000;
+    usedCodes.add(code);
+    displayUserInfo();
+    showMessage("Code accepté ! Vous avez gagné 1000 pièces !", "success");
+    playCoinGainSound();
+} else if (code === "DISCORD100") {
+    currentUser.discordCoins += 100;
+    usedCodes.add(code);
+    displayUserInfo();
+    showMessage("Code accepté ! Vous avez gagné 100 pièces Discord !", "success");
+    playCoinGainSound();
+} else if (code === "VIP500") {
+    currentUser.coins += 500;
+    usedCodes.add(code);
+    displayUserInfo();
+    showMessage("Code VIP accepté ! Vous avez gagné 500 pièces du site !", "success");
+    playCoinGainSound();
+} else {
+    showMessage("Code invalide.", "error");
+}
+        });
+        
+        const musicList = [
+    "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/SnowfallAlexHeppelmann.mp3",
+    "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/OnMyWay.mp3",
+    "https://r2.fivemanage.com/nu25RSNFUtQsSt7QPV8x6/FearlessSamuraiJapaneseLofiHipHopMix.mp3"
+];
+const musicTitles = [
+    "SnowfallAlexHeppelmann",
+    "On My Way",
+    "Fearless Samurai (Japanese Lofi Hip Hop Mix)"
+];
+
+const musicAudio = document.getElementById('site-music');
+const toggleMusicBtn = document.getElementById('toggle-music-btn');
+const musicSelect = document.getElementById('music-select');
+const musicVolume = document.getElementById('music-volume');
+const musicVolumeLabel = document.getElementById('music-volume-label');
+const musicIcon = document.getElementById('music-icon');
+const musicBtnLabel = document.getElementById('music-btn-label');
+const musicTitle = document.getElementById('music-title');
+
+let musicPlaying = true;
+let currentMusicIndex = Math.floor(Math.random() * musicList.length);
+
+function updateMusicUI() {
+    musicTitle.textContent = "🎵 " + musicTitles[currentMusicIndex];
+    musicSelect.value = currentMusicIndex;
+    musicVolumeLabel.textContent = musicVolume.value + "%";
+    if (musicPlaying) {
+        musicIcon.textContent = "⏸️";
+        musicBtnLabel.textContent = "Couper la musique";
+    } else {
+        musicIcon.textContent = "▶️";
+        musicBtnLabel.textContent = "Reprendre la musique";
+    }
+}
+
+function playMusic(index) {
+    currentMusicIndex = index;
+    musicAudio.src = musicList[index];
+    musicAudio.volume = musicVolume.value / 100;
+    musicAudio.play().catch(()=>{});
+    musicPlaying = true;
+    updateMusicUI();
+}
+function pauseMusic() {
+    musicAudio.pause();
+    musicPlaying = false;
+    updateMusicUI();
+}
+toggleMusicBtn.addEventListener('click', () => {
+    if (musicPlaying) {
+        pauseMusic();
+    } else {
+        playMusic(currentMusicIndex);
+    }
+});
+musicSelect.addEventListener('change', (e) => {
+    playMusic(parseInt(e.target.value));
+});
+musicVolume.addEventListener('input', (e) => {
+    const vol = parseInt(e.target.value, 10);
+    musicAudio.volume = vol / 100;
+    musicVolumeLabel.textContent = vol + "%";
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Met à jour les titres dans le select
+    for (let i = 0; i < musicTitles.length; i++) {
+        musicSelect.options[i].text = musicTitles[i];
+    }
+    updateMusicUI();
+    document.body.addEventListener('click', () => {
+        playMusic(currentMusicIndex);
+    }, { once: true });
+});
+
+const sfxBubble = document.getElementById('sfx-bubble');
+const sfxBubbleToggle = document.getElementById('sfx-bubble-toggle');
+const sfxBubbleIcon = document.getElementById('sfx-bubble-icon');
+
+let sfxCollapsed = false;
+sfxBubbleToggle.addEventListener('click', () => {
+    sfxCollapsed = !sfxCollapsed;
+    if (sfxCollapsed) {
+        sfxBubble.classList.add('sfx-collapsed');
+        sfxBubbleIcon.textContent = '+';
+        sfxBubbleToggle.title = "Déplier";
+    } else {
+        sfxBubble.classList.remove('sfx-collapsed');
+        sfxBubbleIcon.textContent = '−';
+        sfxBubbleToggle.title = "Réduire";
+    }
+});
+
+// ...existing code...
+
+// Sauvegarde les données du joueur dans le navigateur
+function saveUserData() {
+    localStorage.setItem('nobleadventure_user', JSON.stringify(currentUser));
+}
+
+// Charge les données du joueur depuis le navigateur
+function loadUserData() {
+    const data = localStorage.getItem('nobleadventure_user');
+    if (data) {
+        try {
+            const parsed = JSON.parse(data);
+            // On vérifie les champs essentiels pour éviter les erreurs
+            if (parsed && parsed.id && parsed.name && parsed.coins !== undefined && parsed.discordCoins !== undefined && parsed.inventory) {
+                currentUser = parsed;
+            }
+        } catch (e) {
+            // Si erreur, on ignore et garde les valeurs par défaut
+        }
+    }
+}
+
+// Appelle loadUserData au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserData();
+    displayUserInfo();
+    displayInventory();
+    document.body.addEventListener('click', Tone.start, { once: true });
+});
+
+// Ajoute saveUserData() à chaque modification des données utilisateur
+function displayUserInfo() {
+    userNameEl.textContent = currentUser.name;
+    userIdEl.textContent = currentUser.id;
+    userAvatarEl.src = currentUser.avatar;
+    userCoinsEl.textContent = currentUser.coins;
+    discordCoinsEl.textContent = currentUser.discordCoins;
+    saveUserData(); // <-- Ajout ici
+}
+function displayInventory() {
+    // ...code existant...
+    saveUserData(); // <-- Ajout ici
+}
+
+    </script>
+</body>
+</html>
