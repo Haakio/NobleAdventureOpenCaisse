@@ -359,6 +359,7 @@
             <div class="text-right">
                 <p class="text-2xl font-bold text-yellow-400">Pièces du Site: <span id="user-coins">0</span></p>
                 <p class="text-xl font-bold text-purple-400">Pièces Discord: <span id="discord-coins">0</span></p>
+                <button id="send-discord-coins-btn" class="btn-primary mt-2">Envoyer mes pièces Discord au bot</button>
             </div>
         </section>
 
@@ -1155,6 +1156,40 @@ function displayUserInfo() {
     userCoinsEl.textContent = currentUser.coins;
     discordCoinsEl.textContent = currentUser.discordCoins;
 }
+
+const sendDiscordCoinsBtn = document.getElementById('send-discord-coins-btn');
+
+sendDiscordCoinsBtn.addEventListener('click', async () => {
+    playClickSound();
+    if (currentUser.discordCoins <= 0) {
+        showMessage("Vous n'avez pas de pièces Discord à envoyer.", "error");
+        return;
+    }
+    const sentAmount = currentUser.discordCoins;
+    // Envoie la demande au serveur
+    try {
+        const response = await fetch('noble-adventure-open-caisse-g9t6cs4e4.vercel.app', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: currentUser.id,      // L'ID Discord du joueur
+                amount: sentAmount           // Le nombre de pièces à transférer
+            })
+        });
+        const data = await response.json();
+        if (data.success) {
+            currentUser.discordCoins = 0;
+            saveUserData();
+            displayUserInfo();
+            showMessage(`Demande envoyée ! ${sentAmount} pièces Discord seront transférées sur votre profil RPG dès que le bot sera connecté.`, "success");
+            playCoinGainSound();
+        } else {
+            showMessage(data.message || "Erreur lors de l'envoi au bot.", "error");
+        }
+    } catch (e) {
+        showMessage("Erreur de connexion au serveur. Réessayez plus tard.", "error");
+    }
+});
     </script>
 </body>
 </html>
