@@ -461,6 +461,12 @@
     </button>
 </div>
 
+<!-- Ajoute ce bouton où tu veux, par exemple sous le pseudo -->
+<a href="https://discord.com/oauth2/authorize?client_id=1286063146599190558&response_type=code&redirect_uri=https%3A%2F%2Fnoble-adventure-open-caisse.vercel.app%2Fauth%2Fdiscord%2Fcallback&scope=identify" class="btn-primary flex items-center gap-2">
+    <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/discord.svg" alt="Discord" style="width:24px;height:24px;">
+    Se connecter avec Discord
+</a>
+
     <script>
         // --- Configuration du jeu ---
         const CRATE_COST_BASIC = 100; // Coût de la caisse du Chevalier
@@ -521,6 +527,18 @@
         const noItemsMessageEl = document.getElementById('no-items-message');
         const buyDiscordCoinsBtns = document.querySelectorAll('.buy-discord-coins-btn');
         const premiumCrateCard = document.getElementById('premium-crate'); // Référence à la carte de la caisse premium
+        const urlParams = new URLSearchParams(window.location.search);
+        const discordId = urlParams.get('discordId');
+        const discordUsername = urlParams.get('username');
+        const discordAvatar = urlParams.get('avatar');
+
+        if (discordId) {
+            currentUser.id = discordId;
+            currentUser.name = discordUsername;
+            currentUser.avatar = `https://cdn.discordapp.com/avatars/${discordId}/${discordAvatar}.png`;
+            saveUserData();
+            displayUserInfo();
+        }
 
         // New elements for multiple reels/rewards
         const reelsWrapper = document.getElementById('reels-wrapper');
@@ -1166,12 +1184,11 @@ function displayUserInfo() {
     discordCoinsEl.textContent = currentUser.discordCoins;
     sendDiscordCoinsBtn.disabled = currentUser.discordCoins <= 0;
     sendDiscordCoinsBtn.style.opacity = "1"; // Toujours visible
-}
-
-if (currentUser.discordCoins <= 0) {
-    sendDiscordCoinsBtn.textContent = "Aucune pièce Discord à envoyer";
-} else {
-    sendDiscordCoinsBtn.textContent = "Envoyer mes pièces Discord au bot";
+    if (currentUser.discordCoins <= 0) {
+        sendDiscordCoinsBtn.textContent = "Aucune pièce Discord à envoyer";
+    } else {
+        sendDiscordCoinsBtn.textContent = "Envoyer mes pièces Discord au bot";
+    }
 }
 
 sendDiscordCoinsBtn.addEventListener('click', async () => {
