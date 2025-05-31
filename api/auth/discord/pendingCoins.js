@@ -1,4 +1,4 @@
-import { connectToDatabase } from '../../../lib/mongodb'; // adapte ce chemin selon ton projet
+import { connectToDatabase } from '../../lib/mongodb'; // adapte ce chemin selon ton projet
 
 export default async function handler(req, res) {
   const { userId } = req.query;
