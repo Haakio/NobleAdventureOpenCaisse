@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   // Remplace par tes vraies infos
   const CLIENT_ID = '1286063146599190558';
   const CLIENT_SECRET = 'OVKemcyJC-zoePF_rWZfuygfBNYpeWmw';
-  const REDIRECT_URI = 'https://noble-adventure-open-caisse.vercel.app/api/auth/discord/callback';
+  const REDIRECT_URI = 'https://noble-adventure-open-caisse.vercel.app/auth/discord/callback';
 
   // Échange le code contre un token
   const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
