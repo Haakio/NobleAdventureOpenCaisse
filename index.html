@@ -917,11 +917,29 @@ sfxVolumeSlider.addEventListener('input', (e) => {
             // --- FIN DE LA SIMULATION ---
         }
 
+        // ...avant le code du formulaire...
+
+function saveUsedCodes() {
+    localStorage.setItem('nobleadventure_used_codes', JSON.stringify(Array.from(usedCodes)));
+}
+
+function loadUsedCodes() {
+    const data = localStorage.getItem('nobleadventure_used_codes');
+    if (data) {
+        try {
+            const arr = JSON.parse(data);
+            arr.forEach(code => usedCodes.add(code));
+        } catch (e) {}
+    }
+}
+
         // --- Gestion du formulaire de code cadeau ---
         const redeemForm = document.getElementById('code-redeem-form');
         const codeInput = document.getElementById('reward-code-input');
         const codeMessageEl = document.getElementById('code-message');
         const usedCodes = new Set(); // Évite réutilisation
+
+        loadUsedCodes(); // Charge les codes utilisés au démarrage
 
         redeemForm.addEventListener('submit', (e) => {
           e.preventDefault();
