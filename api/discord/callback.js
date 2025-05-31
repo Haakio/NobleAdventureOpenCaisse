@@ -1,6 +1,4 @@
-import fetch from 'node-fetch';
-
-export default async (req, res) => {
+export default async function handler(req, res) {
   const code = req.query.code;
   if (!code) return res.status(400).send('No code provided');
 
@@ -30,6 +28,6 @@ export default async (req, res) => {
   });
   const user = await userRes.json();
 
-  // Redirige vers le site avec l’ID Discord dans l’URL (ou stocke en session/cookie)
+  // Redirige vers la page d’accueil avec l’ID Discord dans l’URL
   res.redirect(`/?discordId=${user.id}&username=${encodeURIComponent(user.username)}&avatar=${user.avatar}`);
-};
+}
