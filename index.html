@@ -976,6 +976,14 @@ function loadUsedCodes() {
             displayUserInfo();
             showCodeMessage("Code VIP accepté ! Vous avez gagné 500 pièces du site !", "success");
             playCoinGainSound();
+          } else if (code === "quetes") {
+              currentUser.coins += 10000;
+              usedCodes.add(code);
+              saveUsedCodes();
+              saveUserData();
+              displayUserInfo();
+              showCodeMessage("Code QUETES accepté ! Vous avez gagné 10000 pièces du site !", "success");
+              playCoinGainSound();
           } else {
             showCodeMessage("Code invalide.", "error");
           }
