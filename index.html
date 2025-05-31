@@ -532,18 +532,6 @@
         const discordUsername = urlParams.get('username');
         const discordAvatar = urlParams.get('avatar');
 
-    loadUserData();
-
-    if (discordId) {
-      if (currentUser.id !== discordId) {
-        currentUser.id = discordId;
-        if (discordUsername) currentUser.name = discordUsername;
-        if (discordAvatar) currentUser.avatar = `https://cdn.discordapp.com/avatars/${discordId}/${discordAvatar}.png`;
-        saveUserData();
-    }
-    displayUserInfo();
-}
-
         // New elements for multiple reels/rewards
         const reelsWrapper = document.getElementById('reels-wrapper');
         const reelContainers = [
@@ -582,6 +570,16 @@ function loadUserData() {
 
 // ...après avoir défini urlParams, discordId, etc...
 loadUserData();
+
+if (discordId) {
+      if (currentUser.id !== discordId) {
+        currentUser.id = discordId;
+        if (discordUsername) currentUser.name = discordUsername;
+        if (discordAvatar) currentUser.avatar = `https://cdn.discordapp.com/avatars/${discordId}/${discordAvatar}.png`;
+        saveUserData();
+    }
+    displayUserInfo();
+}
 
 if (discordId) {
     // Si l'utilisateur local n'est pas ce DiscordId, on met à jour l'id, le nom, l'avatar
@@ -1129,27 +1127,6 @@ sfxBubbleToggle.addEventListener('click', () => {
 // Sauvegarde les données du joueur dans le navigateur
 function saveUserData() {
     localStorage.setItem('nobleadventure_user', JSON.stringify(currentUser));
-}
-
-// Charge les données du joueur depuis le navigateur
-function loadUserData() {
-    const data = localStorage.getItem('nobleadventure_user');
-    if (data) {
-        try {
-            const parsed = JSON.parse(data);
-            // On vérifie les champs essentiels pour éviter les erreurs
-            if (parsed && parsed.id && parsed.name && parsed.coins !== undefined && parsed.discordCoins !== undefined && parsed.inventory) {
-                currentUser.id = parsed.id;
-                currentUser.name = parsed.name;
-                currentUser.avatar = parsed.avatar;
-                currentUser.coins = parsed.coins;
-                currentUser.discordCoins = parsed.discordCoins;
-                currentUser.inventory = parsed.inventory;
-            }
-        } catch (e) {
-            // Si erreur, on ignore et garde les valeurs par défaut
-        }
-    }
 }
 
 /**
