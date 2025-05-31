@@ -1,8 +1,8 @@
-import { connectToDatabase } from 'lib/mongodb'; // adapte ce chemin selon ton projet
+import { MongoClient } from "mongodb";
 
-export default async function handler(req, res) {
-  const { userId } = req.query;
-  const { db } = await connectToDatabase();
+export default function handler(req, res) {
+  res.status(200).json({ ok: true });
+}
 
   // Cherche la transaction non traitée pour cet utilisateur
   const transfer = await db.collection('transfers').findOne({
