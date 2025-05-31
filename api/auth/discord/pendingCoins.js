@@ -1,15 +1,15 @@
+import { connectToDatabase } from '../../../lib/mongodb'; // adapte ce chemin selon ton projet
+
 export default async function handler(req, res) {
   const { userId } = req.query;
+  const { db } = await connectToDatabase();
 
-  // Ici tu dois récupérer le montant depuis ta base de données
-  // Exemple fictif (à remplacer par ta logique réelle) :
-  // const amount = await getPendingCoinsFromDB(userId);
+  // Cherche la transaction non traitée pour cet utilisateur
+  const transfer = await db.collection('transfers').findOne({
+    user_id: userId,
+    done: false
+  });
 
-  // Pour le test, on retourne 0 si rien trouvé
-  let amount = 0;
-
-  // Exemple : tu peux utiliser un stockage JSON, MongoDB, etc.
-  // if (userId === "123456789") amount = 500;
-
+  const amount = transfer ? transfer.amount : 0;
   res.status(200).json({ amount });
 }
