@@ -532,13 +532,17 @@
         const discordUsername = urlParams.get('username');
         const discordAvatar = urlParams.get('avatar');
 
-        if (discordId) {
-            currentUser.id = discordId;
-            currentUser.name = discordUsername;
-            currentUser.avatar = `https://cdn.discordapp.com/avatars/${discordId}/${discordAvatar}.png`;
-            saveUserData();
-            displayUserInfo();
-        }
+    loadUserData();
+
+    if (discordId) {
+      if (currentUser.id !== discordId) {
+        currentUser.id = discordId;
+        if (discordUsername) currentUser.name = discordUsername;
+        if (discordAvatar) currentUser.avatar = `https://cdn.discordapp.com/avatars/${discordId}/${discordAvatar}.png`;
+        saveUserData();
+    }
+    displayUserInfo();
+}
 
         // New elements for multiple reels/rewards
         const reelsWrapper = document.getElementById('reels-wrapper');
