@@ -939,14 +939,6 @@ sfxVolumeSlider.addEventListener('input', (e) => {
             });
         });
 
-        // Initialiser l'affichage au chargement de la page
-        document.addEventListener('DOMContentLoaded', () => {
-            displayUserInfo();
-            displayInventory();
-            // Initialiser le contexte audio de Tone.js au premier clic de l'utilisateur
-            document.body.addEventListener('click', Tone.start, { once: true });
-        });
-
         // --- Gestion du formulaire de code cadeau ---
         const redeemForm = document.getElementById('code-redeem-form');
         const codeInput = document.getElementById('reward-code-input');
@@ -1053,17 +1045,6 @@ musicVolume.addEventListener('input', (e) => {
     musicVolumeLabel.textContent = vol + "%";
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Met à jour les titres dans le select
-    for (let i = 0; i < musicTitles.length; i++) {
-        musicSelect.options[i].text = musicTitles[i];
-    }
-    updateMusicUI();
-    document.body.addEventListener('click', () => {
-        playMusic(currentMusicIndex);
-    }, { once: true });
-});
-
 const sfxBubble = document.getElementById('sfx-bubble');
 const sfxBubbleToggle = document.getElementById('sfx-bubble-toggle');
 const sfxBubbleIcon = document.getElementById('sfx-bubble-icon');
@@ -1110,12 +1091,41 @@ function loadUserData() {
     }
 }
 
-// Appelle loadUserData au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
     loadUserData();
     displayUserInfo();
     displayInventory();
+
+    // Initialiser le contexte audio de Tone.js au premier clic de l'utilisateur
     document.body.addEventListener('click', Tone.start, { once: true });
+
+    // Événements pour les boutons d'ouverture de caisse
+    openCrateBtns.forEach(button => {
+        button.addEventListener('click', () => {
+            playClickSound();
+            const crateId = button.dataset.crateId;
+            const openCount = parseInt(button.dataset.openCount); // Récupère le nombre de caisses à ouvrir
+            openCrate(crateId, openCount);
+        });
+    });
+
+    // Événements pour les boutons d'achat de pièces Discord
+    buyDiscordCoinsBtns.forEach(button => {
+        button.addEventListener('click', () => {
+            const amount = parseInt(button.dataset.amount);
+            const cost = parseInt(button.dataset.cost);
+            buyDiscordCoins(amount, cost);
+        });
+    });
+
+    // Musique
+    for (let i = 0; i < musicTitles.length; i++) {
+        musicSelect.options[i].text = musicTitles[i];
+    }
+    updateMusicUI();
+    document.body.addEventListener('click', () => {
+        playMusic(currentMusicIndex);
+    }, { once: true });
 });
 
 // Ajoute saveUserData() à chaque modification des données utilisateur
