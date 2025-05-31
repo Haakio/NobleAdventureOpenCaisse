@@ -555,15 +555,45 @@
         const rewardsDisplayContainer = document.getElementById('rewards-display-container');
 
 
-        // --- État du jeu (Simulé localement) ---
-        let currentUser = {
-            id: 'simulated_user_12345',
-            name: 'Joueur Test',
-            avatar: 'https://placehold.co/60x60/63b3ed/ffffff?text=JT',
-            coins: 1500,
-            discordCoins: 0,
-            inventory: []
-        };
+        // ...avant tout le code...
+let currentUser = {
+    id: 'simulated_user_12345',
+    name: 'Joueur Test',
+    avatar: 'https://placehold.co/60x60/63b3ed/ffffff?text=JT',
+    coins: 1500,
+    discordCoins: 0,
+    inventory: []
+};
+
+function loadUserData() {
+    const data = localStorage.getItem('nobleadventure_user');
+    if (data) {
+        try {
+            const parsed = JSON.parse(data);
+            // On vérifie les champs essentiels pour éviter les erreurs
+            if (parsed && parsed.id && parsed.name && parsed.coins !== undefined && parsed.discordCoins !== undefined && parsed.inventory) {
+                currentUser = parsed; // <-- Remplace tout l'objet !
+            }
+        } catch (e) {
+            // Si erreur, on ignore et garde les valeurs par défaut
+        }
+    }
+}
+
+// ...après avoir défini urlParams, discordId, etc...
+loadUserData();
+
+if (discordId) {
+    // Si l'utilisateur local n'est pas ce DiscordId, on met à jour l'id, le nom, l'avatar
+    if (currentUser.id !== discordId) {
+        currentUser.id = discordId;
+        if (discordUsername) currentUser.name = discordUsername;
+        if (discordAvatar) currentUser.avatar = `https://cdn.discordapp.com/avatars/${discordId}/${discordAvatar}.png`;
+        // coins, discordCoins, inventory restent inchangés
+        saveUserData();
+    }
+    displayUserInfo();
+}
 
         // --- Configuration des sons avec Tone.js ---
         const synth = new Tone.Synth().toDestination();
