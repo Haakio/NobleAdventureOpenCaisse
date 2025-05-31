@@ -510,6 +510,7 @@
         const userAvatarEl = document.getElementById('user-avatar');
         const userCoinsEl = document.getElementById('user-coins');
         const discordCoinsEl = document.getElementById('discord-coins');
+        const sendDiscordCoinsBtn = document.getElementById('send-discord-coins-btn');
         const openCrateBtns = document.querySelectorAll('.open-crate-btn');
         const crateReel = document.getElementById('crate-reel-1'); // Default reel
         const lastRewardContainer = document.getElementById('last-reward-container');
@@ -1164,8 +1165,6 @@ if (currentUser.discordCoins <= 0) {
 } else {
     sendDiscordCoinsBtn.textContent = "Envoyer mes pièces Discord au bot";
 }
-
-const sendDiscordCoinsBtn = document.getElementById('send-discord-coins-btn');
 
 sendDiscordCoinsBtn.addEventListener('click', async () => {
     playClickSound();
