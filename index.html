@@ -354,6 +354,12 @@
                 <div>
                     <p class="text-xl font-semibold text-white" id="user-name">Joueur Test</p>
                     <p class="text-gray-400">ID Discord: <span id="user-id">simulated_user_12345</span></p>
+                    <a id="discord-login-btn"
+                    href="https://discord.com/oauth2/authorize?client_id=1286063146599190558&response_type=code&redirect_uri=https%3A%2F%2Fnoble-adventure-open-caisse.vercel.app%2Fapi%2Fauth%2Fdiscord%2Fcallback&scope=identify" 
+                    class="btn-primary flex items-center gap-2">
+                    <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/discord.svg" alt="Discord" style="width:24px;height:24px;">
+                    <span id="discord-login-label">Se connecter avec Discord</span>
+              </a>
                 </div>
             </div>
             <div class="text-right">
@@ -460,12 +466,6 @@
         <span id="sfx-bubble-icon">−</span>
     </button>
 </div>
-
-<!-- Ajoute ce bouton où tu veux, par exemple sous le pseudo -->
-<a href="https://discord.com/oauth2/authorize?client_id=1286063146599190558&response_type=code&redirect_uri=https%3A%2F%2Fnoble-adventure-open-caisse.vercel.app%2Fapi%2Fauth%2Fdiscord%2Fcallback&scope=identify" class="btn-primary flex items-center gap-2">
-    <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/discord.svg" alt="Discord" style="width:24px;height:24px;">
-    Se connecter avec Discord
-</a>
 
     <script>
         // --- Configuration du jeu ---
@@ -581,16 +581,18 @@ if (discordId) {
     displayUserInfo();
 }
 
-if (discordId) {
-    // Si l'utilisateur local n'est pas ce DiscordId, on met à jour l'id, le nom, l'avatar
-    if (currentUser.id !== discordId) {
-        currentUser.id = discordId;
-        if (discordUsername) currentUser.name = discordUsername;
-        if (discordAvatar) currentUser.avatar = `https://cdn.discordapp.com/avatars/${discordId}/${discordAvatar}.png`;
-        // coins, discordCoins, inventory restent inchangés
-        saveUserData();
+function updateDiscordLoginBtn() {
+    const discordLoginBtn = document.getElementById('discord-login-btn');
+    const discordLoginLabel = document.getElementById('discord-login-label');
+    if (discordId && currentUser.id === discordId) {
+        discordLoginBtn.href = "#";
+        discordLoginBtn.classList.add("opacity-60", "pointer-events-none");
+        discordLoginLabel.textContent = "Connecté à Discord";
+    } else {
+        discordLoginBtn.href = "https://discord.com/oauth2/authorize?client_id=1286063146599190558&response_type=code&redirect_uri=https%3A%2F%2Fnoble-adventure-open-caisse.vercel.app%2Fapi%2Fauth%2Fdiscord%2Fcallback&scope=identify";
+        discordLoginBtn.classList.remove("opacity-60", "pointer-events-none");
+        discordLoginLabel.textContent = "Se connecter avec Discord";
     }
-    displayUserInfo();
 }
 
         // --- Configuration des sons avec Tone.js ---
@@ -1153,6 +1155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadUserData();
     displayUserInfo();
     displayInventory();
+    updateDiscordLoginBtn();
 
     // Initialiser le contexte audio de Tone.js au premier clic de l'utilisateur
     document.body.addEventListener('click', Tone.start, { once: true });
@@ -1200,6 +1203,7 @@ function displayUserInfo() {
     } else {
         sendDiscordCoinsBtn.textContent = "Envoyer mes pièces Discord au bot";
     }
+    updateDiscordLoginBtn();
 }
 
 sendDiscordCoinsBtn.addEventListener('click', async () => {
