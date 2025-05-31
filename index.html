@@ -794,6 +794,7 @@ sfxVolumeSlider.addEventListener('input', (e) => {
 
             // Add all obtained items to inventory
             currentUser.inventory.push(...obtainedItems);
+            saveUserData();
             displayInventory();
 
             // Display rewards (either single or multiple)
@@ -848,6 +849,7 @@ sfxVolumeSlider.addEventListener('input', (e) => {
             if (index >= 0 && index < currentUser.inventory.length) {
                 const soldItem = currentUser.inventory.splice(index, 1)[0]; // Supprime l'objet de l'inventaire
                 currentUser.coins += price; // Ajoute les pièces
+                saveUserData();
                 displayUserInfo();
                 displayInventory();
                 showMessage(`Vous avez vendu "${soldItem.name}" pour ${price} pièces du site.`, 'success');
@@ -880,6 +882,7 @@ sfxVolumeSlider.addEventListener('input', (e) => {
 
             currentUser.coins -= cost; // Déduit les pièces du site
             currentUser.discordCoins += amount; // Ajoute les pièces Discord (simulé)
+            saveUserData();
             displayUserInfo();
             showMessage(`Vous avez acheté ${amount} pièces Discord pour ${cost} pièces du site !`, 'success');
             playCoinGainSound();
@@ -959,19 +962,22 @@ sfxVolumeSlider.addEventListener('input', (e) => {
           }
           if (code === "NOUVEAUX") {
     currentUser.coins += 1000;
-    usedCodes.add(code);
+    usedCodes.add(code);$
+    saveUserData();
     displayUserInfo();
     showMessage("Code accepté ! Vous avez gagné 1000 pièces !", "success");
     playCoinGainSound();
 } else if (code === "DISCORD100") {
     currentUser.discordCoins += 100;
     usedCodes.add(code);
+    saveUserData();
     displayUserInfo();
     showMessage("Code accepté ! Vous avez gagné 100 pièces Discord !", "success");
     playCoinGainSound();
 } else if (code === "VIP500") {
     currentUser.coins += 500;
     usedCodes.add(code);
+    saveUserData();
     displayUserInfo();
     showMessage("Code VIP accepté ! Vous avez gagné 500 pièces du site !", "success");
     playCoinGainSound();
