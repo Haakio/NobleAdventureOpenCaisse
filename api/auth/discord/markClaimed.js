@@ -1,4 +1,4 @@
-import { connectToDatabase } from '../../../lib/mongodb';
+import { connectToDatabase } from 'https://noble-adventure-open-caisse.vercel.app/lib/mongodb';
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
