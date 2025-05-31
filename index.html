@@ -345,6 +345,7 @@
     <input type="text" id="reward-code-input" placeholder="Entrez un code (ex: NOUVEAUX)" class="p-2 rounded-md w-full md:w-1/2">
     <button type="submit" class="btn-primary">Réclamer</button>
   </form>
+  <div id="code-message" class="message-box hidden mt-2"></div>
 </section>
 
         <section class="bg-gray-700 p-6 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between">
@@ -606,19 +607,19 @@ sfxVolumeSlider.addEventListener('input', (e) => {
          * @param {string} message - Le message à afficher.
          * @param {string} type - Le type de message (ex: 'error', 'success', 'info').
          */
-        function showMessage(message, type = 'info') {
-            messageBoxEl.textContent = message;
-            messageBoxEl.classList.remove('hidden', 'bg-red-500', 'bg-green-500', 'bg-orange-400');
+        function showCodeMessage(message, type = 'info') {
+            codeMessageEl.textContent = message;
+            codeMessageEl.classList.remove('hidden', 'bg-red-500', 'bg-green-500', 'bg-orange-400');
             if (type === 'error') {
-                messageBoxEl.classList.add('bg-red-500');
+                codeMessageEl.classList.add('bg-red-500');
             } else if (type === 'success') {
-                messageBoxEl.classList.add('bg-green-500');
+                codeMessageEl.classList.add('bg-green-500');
             } else {
-                messageBoxEl.classList.add('bg-orange-400');
+                codeMessageEl.classList.add('bg-orange-400');
             }
             setTimeout(() => {
-                messageBoxEl.classList.add('hidden');
-            }, 3000); // Le message disparaît après 3 secondes
+                codeMessageEl.classList.add('hidden');
+            }, 3000);
         }
 
         /**
@@ -949,6 +950,7 @@ sfxVolumeSlider.addEventListener('input', (e) => {
         // --- Gestion du formulaire de code cadeau ---
         const redeemForm = document.getElementById('code-redeem-form');
         const codeInput = document.getElementById('reward-code-input');
+        const codeMessageEl = document.getElementById('code-message');
         const usedCodes = new Set(); // Évite réutilisation
 
         redeemForm.addEventListener('submit', (e) => {
@@ -957,33 +959,33 @@ sfxVolumeSlider.addEventListener('input', (e) => {
           const code = codeInput.value.trim().toUpperCase();
           if (!code) return;
           if (usedCodes.has(code)) {
-            showMessage("Code déjà utilisé !", "error");
+            showCodeMessage("Code déjà utilisé !", "error");
             return;
           }
           if (code === "NOUVEAUX") {
-    currentUser.coins += 1000;
-    usedCodes.add(code);$
-    saveUserData();
-    displayUserInfo();
-    showMessage("Code accepté ! Vous avez gagné 1000 pièces !", "success");
-    playCoinGainSound();
-} else if (code === "DISCORD100") {
-    currentUser.discordCoins += 100;
-    usedCodes.add(code);
-    saveUserData();
-    displayUserInfo();
-    showMessage("Code accepté ! Vous avez gagné 100 pièces Discord !", "success");
-    playCoinGainSound();
-} else if (code === "VIP500") {
-    currentUser.coins += 500;
-    usedCodes.add(code);
-    saveUserData();
-    displayUserInfo();
-    showMessage("Code VIP accepté ! Vous avez gagné 500 pièces du site !", "success");
-    playCoinGainSound();
-} else {
-    showMessage("Code invalide.", "error");
-}
+            currentUser.coins += 1000;
+            usedCodes.add(code);
+            saveUserData();
+            displayUserInfo();
+            showCodeMessage("Code accepté ! Vous avez gagné 1000 pièces !", "success");
+            playCoinGainSound();
+          } else if (code === "DISCORD100") {
+            currentUser.discordCoins += 100;
+            usedCodes.add(code);
+            saveUserData();
+            displayUserInfo();
+            showCodeMessage("Code accepté ! Vous avez gagné 100 pièces Discord !", "success");
+            playCoinGainSound();
+          } else if (code === "VIP500") {
+            currentUser.coins += 500;
+            usedCodes.add(code);
+            saveUserData();
+            displayUserInfo();
+            showCodeMessage("Code VIP accepté ! Vous avez gagné 500 pièces du site !", "success");
+            playCoinGainSound();
+          } else {
+            showCodeMessage("Code invalide.", "error");
+          }
         });
         
         const musicList = [
