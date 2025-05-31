@@ -917,28 +917,6 @@ sfxVolumeSlider.addEventListener('input', (e) => {
             // --- FIN DE LA SIMULATION ---
         }
 
-
-        // --- Initialisation et Événements ---
-
-        // Événements pour les boutons d'ouverture de caisse
-        openCrateBtns.forEach(button => {
-            button.addEventListener('click', () => {
-                playClickSound();
-                const crateId = button.dataset.crateId;
-                const openCount = parseInt(button.dataset.openCount); // Récupère le nombre de caisses à ouvrir
-                openCrate(crateId, openCount);
-            });
-        });
-
-        // Événements pour les boutons d'achat de pièces Discord
-        buyDiscordCoinsBtns.forEach(button => {
-            button.addEventListener('click', () => {
-                const amount = parseInt(button.dataset.amount);
-                const cost = parseInt(button.dataset.cost);
-                buyDiscordCoins(amount, cost);
-            });
-        });
-
         // --- Gestion du formulaire de code cadeau ---
         const redeemForm = document.getElementById('code-redeem-form');
         const codeInput = document.getElementById('reward-code-input');
