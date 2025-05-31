@@ -953,6 +953,7 @@ function loadUsedCodes() {
           if (code === "NOUVEAUX") {
             currentUser.coins += 1000;
             usedCodes.add(code);
+            saveUsedCodes();
             saveUserData();
             displayUserInfo();
             showCodeMessage("Code accepté ! Vous avez gagné 1000 pièces !", "success");
@@ -960,6 +961,7 @@ function loadUsedCodes() {
           } else if (code === "DISCORD100") {
             currentUser.discordCoins += 100;
             usedCodes.add(code);
+            saveUsedCodes();
             saveUserData();
             displayUserInfo();
             showCodeMessage("Code accepté ! Vous avez gagné 100 pièces Discord !", "success");
@@ -967,6 +969,7 @@ function loadUsedCodes() {
           } else if (code === "VIP500") {
             currentUser.coins += 500;
             usedCodes.add(code);
+            saveUsedCodes();
             saveUserData();
             displayUserInfo();
             showCodeMessage("Code VIP accepté ! Vous avez gagné 500 pièces du site !", "success");
