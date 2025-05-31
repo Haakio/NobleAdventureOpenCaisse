@@ -1156,7 +1156,13 @@ function displayUserInfo() {
     userCoinsEl.textContent = currentUser.coins;
     discordCoinsEl.textContent = currentUser.discordCoins;
     sendDiscordCoinsBtn.disabled = currentUser.discordCoins <= 0;
-    sendDiscordCoinsBtn.style.opacity = currentUser.discordCoins <= 0 ? "0.5" : "1";
+    sendDiscordCoinsBtn.style.opacity = "1"; // Toujours visible
+}
+
+if (currentUser.discordCoins <= 0) {
+    sendDiscordCoinsBtn.textContent = "Aucune pièce Discord à envoyer";
+} else {
+    sendDiscordCoinsBtn.textContent = "Envoyer mes pièces Discord au bot";
 }
 
 const sendDiscordCoinsBtn = document.getElementById('send-discord-coins-btn');
