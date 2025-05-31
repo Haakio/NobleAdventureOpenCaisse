@@ -1215,7 +1215,7 @@ sendDiscordCoinsBtn.addEventListener('click', async () => {
     const sentAmount = currentUser.discordCoins;
     // Envoie la demande au serveur
     try {
-        const response = await fetch('https://noble-adventure-open-caisse.vercel.app/api/auth/discord/callback', {
+        const response = await fetch('https://noble-adventure-open-caisse.vercel.app/api/auth/discord/transferCoins.js', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
