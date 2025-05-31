@@ -1069,6 +1069,26 @@ function loadUserData() {
     }
 }
 
+/**
+ * Affiche un message temporaire dans la boîte message principale.
+ * @param {string} message - Le message à afficher.
+ * @param {string} type - Le type de message ('error', 'success', 'info').
+ */
+function showMessage(message, type = 'info') {
+    messageBoxEl.textContent = message;
+    messageBoxEl.classList.remove('hidden', 'bg-red-500', 'bg-green-500', 'bg-orange-400');
+    if (type === 'error') {
+        messageBoxEl.classList.add('bg-red-500');
+    } else if (type === 'success') {
+        messageBoxEl.classList.add('bg-green-500');
+    } else {
+        messageBoxEl.classList.add('bg-orange-400');
+    }
+    setTimeout(() => {
+        messageBoxEl.classList.add('hidden');
+    }, 3500);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     loadUserData();
     displayUserInfo();
